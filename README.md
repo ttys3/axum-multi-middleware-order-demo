@@ -16,9 +16,9 @@ Generally speaking, this results in middleware being executed **from bottom to t
 ```
 
 ```
-        requests
-           |
-           v
+         requests
+            |
+            v
 +------ middleware3 ------+
 | +---- middleware2 ----+ |
 | | +-- middleware1 --+ | |
