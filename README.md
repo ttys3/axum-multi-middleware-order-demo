@@ -35,13 +35,13 @@ Generally speaking, this results in middleware being executed **from bottom to t
 
 output log:
 ```
-hook before run: "middleware3"
-hook before run: "middleware2"
-hook before run: "middleware1"
+before next.run: "middleware3"
+before next.run: "middleware2"
+before next.run: "middleware1"
 exec the handler
-hook after run: "middleware1"
-hook after run: "middleware2"
-hook after run: "middleware3"
+after next.run: "middleware1"
+after next.run: "middleware2"
+after next.run: "middleware3"
 ```
 
 ## tower::ServiceBuilder order
