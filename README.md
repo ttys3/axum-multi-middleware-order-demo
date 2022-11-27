@@ -3,8 +3,10 @@
 ## Router::layer order
 
 https://docs.rs/axum/latest/axum/middleware/index.html#ordering
-When you add middleware with Router::layer (or similar) all previously added routes will be wrapped in the middleware.
-Generally speaking, this results in middleware being executed from bottom to top.
+
+When you add middleware with `Router::layer` (or similar) 
+all previously added routes will be **wrapped** in the middleware.  
+Generally speaking, this results in middleware being executed **from bottom to top**.
 
 ```rust
     let app = Router::new().route("/", get(handler))
@@ -44,17 +46,29 @@ hook after run: "middleware3"
 
 ## tower::ServiceBuilder order
 
+https://docs.rs/tower/0.4.13/tower/builder/struct.ServiceBuilder.html#order
+
 its recommended to use tower::ServiceBuilder to apply multiple middleware at once,
 instead of calling layer (or route_layer) repeatedly
 
-but when use tower::ServiceBuilder to apply multiple middleware at once, the order is reversed to `Router::layer`
-https://docs.rs/tower/0.4.13/tower/builder/struct.ServiceBuilder.html#order
+but when use tower::ServiceBuilder to apply multiple middleware at once, 
+the order is reversed compared to `Router::layer`.
+
 Layers that are added first will be called with the request first.
 
+```rust
+    let app = Router::new().route("/", get(handler))
+        .layer(
+    ServiceBuilder::new()
+        .layer(middleware::from_fn(my_middleware1))
+        .layer(middleware::from_fn(my_middleware2))
+        .layer(middleware::from_fn(my_middleware3)));
 ```
-        requests
-           |
-           v
+
+```
+         requests
+            |
+            v
 +------ middleware1 ------+
 | +---- middleware2 ----+ |
 | | +-- middleware3 --+ | |
@@ -64,9 +78,9 @@ Layers that are added first will be called with the request first.
 | | +-- middleware3 --+ | |
 | +---- middleware2 ----+ |
 +------ middleware1 ------+
-           |
-           v
-        responses
+            |
+            v
+         responses
 ```
 
 output log:
